@@ -1,0 +1,634 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>OceanGuard AI | User Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed": "#001e2c",
+                    "surface-container-lowest": "#0d0e0f",
+                    "on-secondary-container": "#9cb9cb",
+                    "primary": "#b6c9d8",
+                    "secondary-fixed": "#c9e7f9",
+                    "surface-container": "#1f2021",
+                    "on-surface": "#e4e2e3",
+                    "surface": "#131314",
+                    "surface-container-high": "#292a2b",
+                    "inverse-surface": "#e4e2e3",
+                    "outline-variant": "#43474b",
+                    "tertiary-fixed-dim": "#33ddc9",
+                    "primary-fixed-dim": "#b6c9d8",
+                    "primary-fixed": "#d2e5f5",
+                    "surface-container-low": "#1b1c1c",
+                    "error": "#ffb4ab",
+                    "surface-bright": "#39393a",
+                    "secondary-fixed-dim": "#aecbdd",
+                    "on-background": "#e4e2e3",
+                    "inverse-on-surface": "#303031",
+                    "secondary-container": "#2e4a59",
+                    "on-secondary": "#173442",
+                    "surface-dim": "#131314",
+                    "on-primary-fixed": "#0b1d29",
+                    "tertiary-container": "#001b17",
+                    "tertiary": "#33ddc9",
+                    "surface-tint": "#b6c9d8",
+                    "on-primary-container": "#718391",
+                    "background": "#131314",
+                    "secondary": "#aecbdd",
+                    "on-tertiary-fixed-variant": "#005048",
+                    "on-secondary-fixed-variant": "#2e4a59",
+                    "outline": "#8d9195",
+                    "on-primary-fixed-variant": "#374955",
+                    "surface-variant": "#343536",
+                    "on-surface-variant": "#c3c7cb",
+                    "error-container": "#93000a",
+                    "on-error-container": "#ffdad6",
+                    "tertiary-fixed": "#5cfae5",
+                    "inverse-primary": "#4f616e",
+                    "on-tertiary": "#003731",
+                    "on-error": "#690005",
+                    "surface-container-highest": "#343536",
+                    "primary-container": "#061924",
+                    "on-tertiary-container": "#009082"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "sm": "12px",
+                    "xl": "32px",
+                    "margin-desktop": "40px",
+                    "base": "4px",
+                    "margin-mobile": "16px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "xs": "8px"
+            },
+            "fontFamily": {
+                    "headline-xl": ["Manrope"],
+                    "headline-lg": ["Manrope"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-sm": ["Manrope"],
+                    "headline-md": ["Manrope"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["10px", {"lineHeight": "12px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #131314;
+            color: #e4e2e3;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #33ddc9;
+            border-radius: 10px;
+        }
+
+        .glass-panel {
+            background: rgba(11, 42, 56, 0.4);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(234, 247, 247, 0.1);
+        }
+
+        .sonar-wave {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 40px;
+            height: 40px;
+            pointer-events: none;
+        }
+        .sonar-arc {
+            position: absolute;
+            border: 1px solid rgba(51, 221, 201, 0.2);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: sonar-ping 3s infinite;
+        }
+        @keyframes sonar-ping {
+            0% { width: 0; height: 0; opacity: 0.8; }
+            100% { width: 60px; height: 60px; opacity: 0; }
+        }
+
+        .pulse-aqua {
+            box-shadow: 0 0 0 0 rgba(35, 213, 193, 0.4);
+            animation: pulse-animation 2s infinite;
+        }
+        @keyframes pulse-animation {
+            0% { box-shadow: 0 0 0 0 rgba(35, 213, 193, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(35, 213, 193, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(35, 213, 193, 0); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Background Atmospheric Layer -->
+<div class="fixed inset-0 z-[-1] opacity-5 pointer-events-none">
+<svg height="100%" viewBox="0 0 1000 1000" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0,500 C100,450 200,550 300,500 C400,450 500,550 600,500 C700,450 800,550 900,500 L1000,500" fill="transparent" stroke="#EAF7F7"></path>
+<path d="M0,550 C150,500 250,600 400,550 C550,500 650,600 800,550 L1000,550" fill="transparent" stroke="#EAF7F7"></path>
+</svg>
+</div>
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest border-r border-outline-variant/10 shadow-sm z-50 flex flex-col py-lg">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-tertiary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div>
+<h1 class="text-headline-sm font-headline-sm font-bold text-tertiary leading-tight">OceanGuard AI</h1>
+<p class="text-label-sm font-label-sm text-on-surface-variant tracking-wider uppercase">Maritime Command</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Command Center -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface mx-2 transition-colors hover:bg-surface-container-high/50 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-md font-label-md">Command Center</span>
+</a>
+<!-- User Management (Active) -->
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-tertiary rounded-lg mx-2 opacity-90 transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">manage_accounts</span>
+<span class="text-label-md font-label-md">User Management</span>
+</a>
+<!-- Region Access -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface mx-2 transition-colors hover:bg-surface-container-high/50 rounded-lg" href="#">
+<span class="material-symbols-outlined">public</span>
+<span class="text-label-md font-label-md">Region Access</span>
+</a>
+<!-- Security Audit -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface mx-2 transition-colors hover:bg-surface-container-high/50 rounded-lg" href="#">
+<span class="material-symbols-outlined">verified_user</span>
+<span class="text-label-md font-label-md">Security Audit</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface mx-2 transition-colors hover:bg-surface-container-high/50 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label-md font-label-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-2 space-y-1">
+<div class="px-4 py-2 mb-2">
+<div class="flex items-center gap-2 text-tertiary">
+<span class="w-2 h-2 rounded-full bg-tertiary pulse-aqua"></span>
+<span class="text-label-sm font-label-sm font-semibold">System Status: Active</span>
+</div>
+</div>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface transition-colors hover:bg-surface-container-high/50 rounded-lg" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-label-md font-label-md">Documentation</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface transition-colors hover:bg-surface-container-high/50 rounded-lg" href="#">
+<span class="material-symbols-outlined">help_center</span>
+<span class="text-label-md font-label-md">Support</span>
+</a>
+</div>
+</aside>
+<!-- TopNavBar (Authority: JSON) -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-surface-container/80 backdrop-blur-xl border-b border-outline-variant/10 shadow-md flex justify-between items-center px-gutter">
+<div class="flex items-center gap-6 flex-1">
+<div class="relative w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant/20 rounded-full py-2 pl-10 pr-4 text-body-sm focus:outline-none focus:border-tertiary/50 transition-all" placeholder="Search system personnel..." type="text">
+</div>
+<nav class="flex items-center gap-8">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors text-label-md font-label-md" href="#">Directives</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors text-label-md font-label-md" href="#">Live Map</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors text-label-md font-label-md" href="#">Archive</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:bg-surface-variant/30 rounded-full p-2 transition-all">
+<span class="material-symbols-outlined text-tertiary">notifications</span>
+</button>
+<button class="hover:bg-surface-variant/30 rounded-full p-2 transition-all">
+<span class="material-symbols-outlined text-tertiary">security</span>
+</button>
+<div class="h-8 w-px bg-outline-variant/20 mx-2"></div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="text-right">
+<p class="text-label-md font-semibold text-on-surface group-hover:text-tertiary transition-colors">Admin_Alpha</p>
+<p class="text-label-sm text-on-surface-variant">Lead Administrator</p>
+</div>
+<img class="w-10 h-10 rounded-full border border-tertiary/30 object-cover" data-alt="A professional headshot of a maritime security administrator in a high-tech control room environment. The lighting is moody with deep teal and aqua accents, reflecting the high-stakes OceanGuard AI brand identity. The individual has a focused, calm expression, wearing a dark navy command uniform. High-resolution digital photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9aJd8yTdDxndytmN3DEfi_fEyqtJ5y35NBc_BUfu5nizSRQUx460emP5BqKT8F7lAGrszkyPHKs-MJekFGXDzzxf-zybGVJ61O3MCxs9u-nwSKbA0C2tdRfqFCAU8X1iT0lYUTVLQTakv4qzpeFABDY1-n1Se1lbaQifv1j2PUEAjlihsSxhf0MvnimSPHiNpA17BosM_iLZR7pvYQjM6aFE_s6sqGl0de_Ik-qRsd0bL4XHwqeoB">
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-64 pt-16 h-screen overflow-hidden flex">
+<!-- Content Scrollable -->
+<div class="flex-1 overflow-y-auto p-gutter custom-scrollbar space-y-8">
+<!-- Header Section -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-headline-md font-headline-md text-on-surface">Personnel Command</h2>
+<p class="text-body-md text-on-surface-variant">Global access control and authority management.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-5 py-2.5 bg-surface-container-high border border-outline-variant/30 rounded-lg text-label-md font-label-md hover:bg-surface-variant/50 transition-all">
+<span class="material-symbols-outlined text-sm">download</span>
+                        Export Audit
+                    </button>
+<button class="flex items-center gap-2 px-5 py-2.5 bg-tertiary text-on-tertiary rounded-lg text-label-md font-label-md hover:brightness-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">person_add</span>
+                        Invite User
+                    </button>
+</div>
+</div>
+<!-- Top Metrics Grid -->
+<div class="grid grid-cols-5 gap-4">
+<!-- Metric Card -->
+<div class="glass-panel p-lg rounded-xl relative overflow-hidden group">
+<div class="sonar-wave"><div class="sonar-arc"></div></div>
+<p class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest mb-2">Total Users</p>
+<div class="flex items-end gap-2">
+<h3 class="text-headline-md font-headline-md text-on-surface">1,240</h3>
+<span class="text-tertiary text-label-sm mb-1">+12%</span>
+</div>
+</div>
+<!-- Metric Card -->
+<div class="glass-panel p-lg rounded-xl relative overflow-hidden group">
+<p class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest mb-2">Active Users</p>
+<div class="flex items-end gap-2">
+<h3 class="text-headline-md font-headline-md text-tertiary">982</h3>
+<span class="text-tertiary/60 text-label-sm mb-1">Live</span>
+</div>
+</div>
+<!-- Metric Card -->
+<div class="glass-panel p-lg rounded-xl relative overflow-hidden group">
+<p class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest mb-2">Pending</p>
+<div class="flex items-end gap-2">
+<h3 class="text-headline-md font-headline-md text-on-surface">14</h3>
+</div>
+</div>
+<!-- Metric Card -->
+<div class="glass-panel p-lg rounded-xl relative overflow-hidden group border-tertiary/20">
+<p class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest mb-2">MFA Coverage</p>
+<div class="flex items-end gap-2">
+<h3 class="text-headline-md font-headline-md text-on-surface">98%</h3>
+<div class="w-16 h-1 bg-surface-container-high rounded-full mb-3 overflow-hidden">
+<div class="h-full bg-tertiary w-[98%]"></div>
+</div>
+</div>
+</div>
+<!-- Metric Card -->
+<div class="glass-panel p-lg rounded-xl relative overflow-hidden group">
+<p class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest mb-2">Suspended</p>
+<div class="flex items-end gap-2">
+<h3 class="text-headline-md font-headline-md text-error">5</h3>
+</div>
+</div>
+</div>
+<!-- Filters Bar -->
+<div class="flex flex-wrap items-center gap-4 py-2">
+<div class="flex items-center gap-2 px-3 py-2 bg-surface-container-low rounded-lg border border-outline-variant/10">
+<span class="text-label-sm text-on-surface-variant">Role:</span>
+<select class="bg-transparent border-none focus:ring-0 text-label-md font-semibold text-on-surface p-0 cursor-pointer">
+<option>All Roles</option>
+<option>Authority Analyst</option>
+<option>Researcher</option>
+<option>Conservation Partner</option>
+<option>Platform Admin</option>
+</select>
+</div>
+<div class="flex items-center gap-2 px-3 py-2 bg-surface-container-low rounded-lg border border-outline-variant/10">
+<span class="text-label-sm text-on-surface-variant">Organization:</span>
+<select class="bg-transparent border-none focus:ring-0 text-label-md font-semibold text-on-surface p-0 cursor-pointer">
+<option>All Orgs</option>
+<option>Global Marine Research</option>
+<option>UN Environment</option>
+</select>
+</div>
+<div class="flex items-center gap-2 px-3 py-2 bg-surface-container-low rounded-lg border border-outline-variant/10">
+<span class="text-label-sm text-on-surface-variant">Status:</span>
+<select class="bg-transparent border-none focus:ring-0 text-label-md font-semibold text-on-surface p-0 cursor-pointer">
+<option>Any Status</option>
+<option>Active</option>
+<option>Pending</option>
+<option>Suspended</option>
+</select>
+</div>
+<div class="flex items-center gap-2 px-3 py-2 bg-surface-container-low rounded-lg border border-outline-variant/10">
+<span class="text-label-sm text-on-surface-variant">Region:</span>
+<select class="bg-transparent border-none focus:ring-0 text-label-md font-semibold text-on-surface p-0 cursor-pointer">
+<option>Global</option>
+<option>Pacific Sector</option>
+<option>North Atlantic</option>
+</select>
+</div>
+<button class="text-tertiary text-label-md hover:underline underline-offset-4 ml-auto">Clear All Filters</button>
+</div>
+<!-- Main Table Container -->
+<div class="glass-panel rounded-xl overflow-hidden shadow-2xl">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 border-b border-outline-variant/10">
+<th class="px-6 py-4 text-label-sm font-bold text-on-surface-variant uppercase tracking-widest">Name</th>
+<th class="px-6 py-4 text-label-sm font-bold text-on-surface-variant uppercase tracking-widest">Organization</th>
+<th class="px-6 py-4 text-label-sm font-bold text-on-surface-variant uppercase tracking-widest">Role</th>
+<th class="px-6 py-4 text-label-sm font-bold text-on-surface-variant uppercase tracking-widest">Regions</th>
+<th class="px-6 py-4 text-label-sm font-bold text-on-surface-variant uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 text-label-sm font-bold text-on-surface-variant uppercase tracking-widest">MFA</th>
+<th class="px-6 py-4 text-label-sm font-bold text-on-surface-variant uppercase tracking-widest">Last Active</th>
+<th class="px-6 py-4"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<!-- Table Row 1 (Selected) -->
+<tr class="bg-secondary-container/20 group cursor-pointer border-l-2 border-tertiary">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-full border border-outline-variant/30" data-alt="A portrait of a male environmental scientist in his 40s. He has a scholarly yet rugged look, suitable for field research in maritime conditions. Soft, cool lighting with cyan shadows. High-fidelity cinematic rendering with deep teal background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJDiB0vvIpCpJ274lypwYAU4Ltd6Zt6XCY3st7ZTSRK5YPQ2U4GESIGqn0bDZL8N1JnC-V84uI4o9a_7gVyVWFyKEB4uRbTMzr7i0w-fUcH9Tll26y6ONVAymEC2xjNESpgWxd0-Q2yuzUQvU8Kfps-L8j_RJpCqNr7ceyxObwokG0OfNmiemdw_8fRvQu41Ko8itxaHj_eH_UDB9PEy0Sv2QT0HUJiyAFPoe5DT6xZ2I2jnpGhlu9">
+<div>
+<p class="text-label-md font-semibold text-on-surface">Dr. Elias Thorne</p>
+<p class="text-label-sm text-on-surface-variant">elias.t@marine.org</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">Global Marine Research</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded bg-tertiary/10 text-tertiary text-[10px] font-bold uppercase">Authority Analyst</span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">North Atlantic</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span class="text-body-sm">Active</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="material-symbols-outlined text-tertiary text-lg" title="Enabled">verified</span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">12m ago</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-variant/30 rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-high/30 group cursor-pointer transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-full border border-outline-variant/30" data-alt="Close up of a female conservation specialist in her 30s. She is wearing high-end weather-resistant gear with a subtle badge. The scene is illuminated by glowing blue monitors in a maritime control center. Hyper-realistic style, emphasizing technical detail and professional focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8tPrB9MbQ8y1Lm1nXrxc0PagQ43ISk6iIDZ9dDC-mrqWwaxXn99vTFueClszuaLnk5o7PJ6n0248iyq5AGQ9Z9wRSmMuiY4ce96ExSVTcd5z3Irlec4OipxiERqddwD4i2SMsg61EUHEEadecWzaUydni3U3ghCO4QJbhpQN3xWh7-_B5kLT3Ea7Gh7vLUE6oTXSmuF5Sci24R9xXMZ6lMG3Cf2bgHoc9DZ31cpFynGxHC86KNS8u">
+<div>
+<p class="text-label-md font-semibold text-on-surface">Sarah J. Jenkins</p>
+<p class="text-label-sm text-on-surface-variant">s.jenkins@un.org</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">UN Environment</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded bg-secondary-container/50 text-secondary text-[10px] font-bold uppercase">Researcher</span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">Pacific Sector</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+<span class="text-body-sm">Pending</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="material-symbols-outlined text-outline-variant text-lg">cancel</span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">Never</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-variant/30 rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-high/30 group cursor-pointer transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-full border border-outline-variant/30" data-alt="A mature man in his late 50s, representing a high-level policy maker. He has graying hair and glasses, with a sharp suit. Background is a blurred digital map of the world's oceans in shades of deep blue. The image conveys wisdom and authority within a technological governance framework." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAN20NBdAUCOsrUDXf62LcqoqcOKUkKQXND30znk2jgLIrFmRneP2EVCLowV-Twi1a2WJr517rw3ROqBS186TnLCjAyjemRZ5HMb83918GajV4F61Ai_8pUKPN08IP5I_eVd44QKq3InVO24BePazIbnO_wQ2nkTMVGeu6Pydcpn2_zlqXtVKggWJ_rsMKz3bm19gMhuyvFO0HL8jOrVPFMSaeFciy9Fu1mk_Y9gdG56Uo7PY8S1M64">
+<div>
+<p class="text-label-md font-semibold text-on-surface">Mark Van de Meer</p>
+<p class="text-label-sm text-on-surface-variant">mark.vdm@oceanguard.ai</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">Platform Admin</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded bg-primary-container text-primary text-[10px] font-bold uppercase">Platform Admin</span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">Global</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span class="text-body-sm">Active</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="material-symbols-outlined text-tertiary text-lg">verified</span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">2h ago</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-variant/30 rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-high/30 group cursor-pointer transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant font-bold text-label-md">
+                                        LO
+                                    </div>
+<div>
+<p class="text-label-md font-semibold text-on-surface">Lana O'Sullivan</p>
+<p class="text-label-sm text-on-surface-variant">lana.o@wwf.int</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">Conservation Partner</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded bg-secondary-container/30 text-secondary text-[10px] font-bold uppercase">Conservation Partner</span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">Coral Sea</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-error">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+<span class="text-body-sm font-semibold">Suspended</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="material-symbols-outlined text-on-surface-variant text-lg">verified</span>
+</td>
+<td class="px-6 py-4 text-body-sm text-on-surface-variant">14d ago</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-variant/30 rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-surface-container-low border-t border-outline-variant/10 flex justify-between items-center">
+<p class="text-label-sm text-on-surface-variant">Showing 1 to 10 of 1,240 personnel</p>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-surface-variant/30 rounded-full text-on-surface-variant opacity-50 cursor-not-allowed">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center bg-tertiary text-on-tertiary rounded-lg font-bold text-label-sm">1</button>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-variant/30 text-on-surface-variant rounded-lg font-bold text-label-sm">2</button>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-variant/30 text-on-surface-variant rounded-lg font-bold text-label-sm">3</button>
+<span class="text-on-surface-variant">...</span>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-variant/30 text-on-surface-variant rounded-lg font-bold text-label-sm">124</button>
+<button class="p-2 hover:bg-surface-variant/30 rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Selection Detail Panel (Right Side) -->
+<aside class="w-96 h-full bg-surface-container-lowest border-l border-outline-variant/10 flex flex-col">
+<div class="p-lg space-y-6">
+<div class="flex justify-between items-start">
+<div class="space-y-4 text-center w-full">
+<div class="relative inline-block mx-auto">
+<img class="w-24 h-24 rounded-full border-4 border-tertiary/20 object-cover mx-auto" data-alt="A portrait of a male environmental scientist in his 40s. He has a scholarly yet rugged look, suitable for field research in maritime conditions. Soft, cool lighting with cyan shadows. High-fidelity cinematic rendering with deep teal background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMZ9C9ZB-WQluM7h3uyTak6eMbOyy4SD3vTOKLoAfcJydv6sAWQUKCX65JQWr2C5sYgWkKhoeINdsRsMlJhk_RAgvrHuDmZBP1dhYdK-tqjCDj53REcTaPlRFsUQATJ4YyoIwbPOmy78WLL1jMXehES78gL3SKRxZLX7J_mYK9AnoqLThzEdTZPtxkZ3aVKVdFAkFzDm9xb9UuOnqTuWf22U0L7fIsEEUCYDS6TbG2myojjLHVirIq">
+<span class="absolute bottom-1 right-1 w-5 h-5 bg-tertiary rounded-full border-4 border-surface-container-lowest"></span>
+</div>
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Dr. Elias Thorne</h3>
+<p class="text-body-sm text-on-surface-variant">ID: OG-992-ALPHA</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button class="px-4 py-2 bg-surface-container-high rounded-lg text-label-sm font-semibold hover:bg-surface-variant/50 transition-all">Edit Role</button>
+<button class="px-4 py-2 bg-surface-container-high rounded-lg text-label-sm font-semibold hover:bg-surface-variant/50 transition-all">Access Log</button>
+<button class="px-4 py-2 bg-surface-container-high rounded-lg text-label-sm font-semibold hover:bg-surface-variant/50 transition-all">Reset MFA</button>
+<button class="px-4 py-2 bg-error-container text-on-error-container rounded-lg text-label-sm font-semibold hover:opacity-80 transition-all">Suspend</button>
+</div>
+<!-- Tabs -->
+<div class="border-b border-outline-variant/10">
+<div class="flex gap-6">
+<button class="pb-3 text-label-md font-semibold text-tertiary border-b-2 border-tertiary">Permissions</button>
+<button class="pb-3 text-label-md font-semibold text-on-surface-variant hover:text-on-surface">Access Scope</button>
+<button class="pb-3 text-label-md font-semibold text-on-surface-variant hover:text-on-surface">Audit Trail</button>
+</div>
+</div>
+<!-- Tab Content -->
+<div class="space-y-6 custom-scrollbar overflow-y-auto max-h-[calc(100vh-500px)] pr-2">
+<div class="space-y-4">
+<div class="flex justify-between items-center p-3 bg-surface-container-high/30 rounded-lg border border-outline-variant/10">
+<div>
+<p class="text-label-md font-semibold">Live Feed Access</p>
+<p class="text-label-sm text-on-surface-variant">Real-time ocean telemetry</p>
+</div>
+<div class="w-10 h-5 bg-tertiary rounded-full relative cursor-pointer">
+<div class="absolute right-0.5 top-0.5 w-4 h-4 bg-on-tertiary rounded-full"></div>
+</div>
+</div>
+<div class="flex justify-between items-center p-3 bg-surface-container-high/30 rounded-lg border border-outline-variant/10">
+<div>
+<p class="text-label-md font-semibold">Incident Management</p>
+<p class="text-label-sm text-on-surface-variant">Respond to ocean alerts</p>
+</div>
+<div class="w-10 h-5 bg-tertiary rounded-full relative cursor-pointer">
+<div class="absolute right-0.5 top-0.5 w-4 h-4 bg-on-tertiary rounded-full"></div>
+</div>
+</div>
+<div class="flex justify-between items-center p-3 bg-surface-container-high/30 rounded-lg border border-outline-variant/10">
+<div>
+<p class="text-label-md font-semibold">Archive Retrieval</p>
+<p class="text-label-sm text-on-surface-variant">Query historical sensor data</p>
+</div>
+<div class="w-10 h-5 bg-tertiary rounded-full relative cursor-pointer">
+<div class="absolute right-0.5 top-0.5 w-4 h-4 bg-on-tertiary rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="bg-primary-container/30 border border-primary/20 p-4 rounded-lg">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-sm">info</span>
+<span class="text-label-sm font-bold text-primary uppercase">Security Note</span>
+</div>
+<p class="text-label-sm text-on-primary-container leading-relaxed">
+                            Permissions for this user are restricted to the "North Atlantic" region policy. Escalation requires Super Admin approval.
+                        </p>
+</div>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="mt-auto p-lg border-t border-outline-variant/10 bg-surface-container-low">
+<div class="flex items-center justify-between text-label-sm mb-4">
+<span class="text-on-surface-variant">Last updated by Admin_Alpha</span>
+<span class="text-on-surface-variant">42m ago</span>
+</div>
+<button class="w-full py-3 bg-transparent border-2 border-tertiary text-tertiary rounded-lg font-bold hover:bg-tertiary hover:text-on-tertiary transition-all">
+                    Save Permission Changes
+                </button>
+</div>
+</aside>
+</main>
+<script>
+        // Micro-interaction for table rows
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', () => {
+                document.querySelectorAll('tbody tr').forEach(r => {
+                    r.classList.remove('bg-secondary-container/20', 'border-l-2', 'border-tertiary');
+                    r.classList.add('hover:bg-surface-container-high/30');
+                });
+                row.classList.add('bg-secondary-container/20', 'border-l-2', 'border-tertiary');
+                row.classList.remove('hover:bg-surface-container-high/30');
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-tertiary/20');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-tertiary/20');
+        });
+    </script>
+</body></html>

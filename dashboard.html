@@ -1,0 +1,542 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>OceanGuard AI | Marine Intelligence Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Manrope:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-abyss { background-color: #061924; }
+        .bg-deep-teal { background-color: #0b2a38; }
+        .text-bio-aqua { color: #23d5c1; }
+        .bg-bio-aqua { background-color: #23d5c1; }
+        .border-bio-aqua { border-color: #23d5c1; }
+        .text-reef-red { color: #ff6b6b; }
+        .text-pelagic-blue { color: #33ddc9; }
+        
+        /* Custom Bathymetric Texture */
+        .bathymetric-overlay {
+            background-image: radial-gradient(circle at 2px 2px, rgba(35, 213, 193, 0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        .glass-card {
+            background: rgba(11, 42, 56, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(234, 247, 247, 0.1);
+        }
+
+        .sonar-pulse {
+            position: relative;
+        }
+        .sonar-pulse::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #23d5c1;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            opacity: 0;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        .sparkline-svg {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: dash 2s linear forwards;
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#1f2021",
+                        "on-error-container": "#ffdad6",
+                        "on-error": "#690005",
+                        "on-secondary-fixed": "#001e2c",
+                        "primary-fixed-dim": "#b6c9d8",
+                        "error-container": "#93000a",
+                        "on-background": "#e4e2e3",
+                        "error": "#ffb4ab",
+                        "surface-tint": "#b6c9d8",
+                        "outline-variant": "#43474b",
+                        "secondary": "#aecbdd",
+                        "tertiary-fixed": "#5cfae5",
+                        "on-tertiary-fixed-variant": "#005048",
+                        "tertiary-container": "#001b17",
+                        "primary": "#b6c9d8",
+                        "on-primary-container": "#718391",
+                        "on-tertiary-container": "#009082",
+                        "secondary-fixed": "#c9e7f9",
+                        "on-secondary-container": "#9cb9cb",
+                        "on-surface-variant": "#c3c7cb",
+                        "surface-variant": "#343536",
+                        "surface-bright": "#39393a",
+                        "surface-container-highest": "#343536",
+                        "on-secondary-fixed-variant": "#2e4a59",
+                        "on-tertiary-fixed": "#00201c",
+                        "inverse-primary": "#4f616e",
+                        "tertiary-fixed-dim": "#33ddc9",
+                        "surface-dim": "#131314",
+                        "on-surface": "#e4e2e3",
+                        "on-primary-fixed-variant": "#374955",
+                        "surface-container-low": "#1b1c1c",
+                        "outline": "#8d9195",
+                        "tertiary": "#33ddc9",
+                        "secondary-container": "#2e4a59",
+                        "on-primary-fixed": "#0b1d29",
+                        "inverse-on-surface": "#303031",
+                        "surface-container-lowest": "#0d0e0f",
+                        "surface": "#131314",
+                        "secondary-fixed-dim": "#aecbdd",
+                        "on-secondary": "#173442",
+                        "inverse-surface": "#e4e2e3",
+                        "primary-fixed": "#d2e5f5",
+                        "on-primary": "#21323e",
+                        "on-tertiary": "#003731",
+                        "background": "#131314",
+                        "primary-container": "#061924",
+                        "surface-container-high": "#292a2b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "40px",
+                        "base": "4px",
+                        "md": "16px",
+                        "xs": "8px",
+                        "gutter": "24px",
+                        "sm": "12px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "headline-xl": ["Manrope"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-sm": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["10px", {"lineHeight": "12px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-abyss text-on-surface font-body-md selection:bg-tertiary selection:text-on-tertiary">
+<!-- Persistent SideNavBar -->
+<aside class="flex flex-col h-screen fixed left-0 top-0 z-50 bg-surface-container-lowest dark:bg-surface-container-lowest docked full-height left-0 w-64 border-r border-outline-variant/10 shadow-xl overflow-y-auto">
+<div class="p-md flex items-center gap-xs">
+<div class="w-10 h-10 bg-tertiary/20 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1">waves</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-tertiary dark:text-tertiary">OceanGuard AI</h1>
+<p class="text-[10px] uppercase tracking-widest text-outline">Marine Intelligence</p>
+</div>
+</div>
+<nav class="mt-md flex-1 px-xs space-y-1">
+<!-- Active Tab: Overview -->
+<a class="flex items-center gap-md text-tertiary bg-tertiary-container/10 border-r-4 border-tertiary font-bold px-md py-sm transition-all hover:bg-surface-variant/50" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">dashboard</span>
+<span class="font-label-md text-label-md">Overview</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant font-medium px-md py-sm hover:bg-surface-variant/50 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">dataset</span>
+<span class="font-label-md text-label-md">Data Ingestion</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant font-medium px-md py-sm hover:bg-surface-variant/50 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-label-md text-label-md">AI Analysis</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant font-medium px-md py-sm hover:bg-surface-variant/50 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-label-md text-label-md">Ocean Map</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant font-medium px-md py-sm hover:bg-surface-variant/50 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-label-md text-label-md">Alerts</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant font-medium px-md py-sm hover:bg-surface-variant/50 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">query_stats</span>
+<span class="font-label-md text-label-md">Risk Forecast</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant font-medium px-md py-sm hover:bg-surface-variant/50 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">pets</span>
+<span class="font-label-md text-label-md">Species Tracking</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant font-medium px-md py-sm hover:bg-surface-variant/50 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+</nav>
+<div class="p-md mt-auto border-t border-outline-variant/10">
+<a class="flex items-center gap-md text-on-surface-variant font-medium px-md py-sm hover:bg-surface-variant/50 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-md text-on-surface-variant font-medium px-md py-sm hover:bg-surface-variant/50 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full pl-72 pr-margin-desktop h-16 fixed top-0 z-40 bg-surface-container/80 backdrop-blur-xl border-b border-outline-variant/10 shadow-sm">
+<div class="flex items-center gap-lg">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-sm">search</span>
+<input class="bg-surface-container-low border border-outline-variant/20 rounded-full py-1.5 pl-9 pr-4 text-body-sm font-body-sm w-64 focus:ring-1 focus:ring-tertiary focus:outline-none focus:border-tertiary" placeholder="Search marine data..." type="text">
+</div>
+<nav class="hidden lg:flex gap-md">
+<a class="text-primary border-b-2 border-primary pb-1 font-body-sm text-body-sm" href="#">Global View</a>
+<a class="text-on-surface-variant hover:text-primary transition-opacity font-body-sm text-body-sm" href="#">Fleet Ops</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-reef-red rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-colors">
+<span class="material-symbols-outlined">history</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-colors">
+<span class="material-symbols-outlined">cloud_sync</span>
+</button>
+<div class="flex items-center gap-xs ml-md border-l border-outline-variant/20 pl-md">
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface">Cmdr. Waters</p>
+<p class="text-[10px] text-outline">Level 4 Clearance</p>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-tertiary">
+<img class="w-full h-full object-cover" data-alt="A professional portrait of a senior marine commander in a futuristic navy uniform, set against a background of dimly lit tactical screens displaying underwater data charts. The lighting is cold blue with sharp metallic highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBM1VQ4ExbGC49RZoPyTQApZImuKgpWH8j3MMpgVZTwgL96pRQMXbr7ukIuRNPSsLWhE7aKK682pJidAba5BoRyRBPBlGFrn4D_-W3vBgyx-Jgnnp9_f9fstTp9NQM94M6x2M8ADVntYl0KsBONmNq2luAO0niet9l0dwC7DnOeh-h-DwcC-LCy3pd_n4zP9RoFCa3UNxs_z6SK6aOa-YJAGqLLE1JaAwvj63RRXeAbLXo3mtH0T_xH">
+</div>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="ml-64 pt-16 min-h-screen bathymetric-overlay">
+<div class="p-margin-desktop flex gap-gutter">
+<!-- Left Content Column -->
+<div class="flex-1 space-y-gutter">
+<!-- KPI Grid -->
+<div class="grid grid-cols-5 gap-md">
+<!-- KPI 1 -->
+<div class="glass-card p-md rounded-xl space-y-base relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-reef-red text-xl">warning</span>
+<span class="text-reef-red font-label-md text-label-md flex items-center gap-1">+12% <span class="material-symbols-outlined text-[12px]">trending_up</span></span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md">Active Alerts</p>
+<h3 class="font-headline-md text-headline-md font-bold">24</h3>
+</div>
+<div class="h-8 w-full mt-2 opacity-50">
+<svg class="w-full h-full sparkline-svg" viewBox="0 0 100 30">
+<path d="M0,25 L10,20 L20,28 L30,15 L40,22 L50,10 L60,18 L70,5 L80,12 L90,2 L100,8" fill="none" stroke="#FF6B6B" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="glass-card p-md rounded-xl space-y-base relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-bio-aqua text-xl">water_drop</span>
+<span class="text-bio-aqua font-label-md text-label-md flex items-center gap-1">-5% <span class="material-symbols-outlined text-[12px]">trending_down</span></span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md">Pollution Hotspots</p>
+<h3 class="font-headline-md text-headline-md font-bold">156</h3>
+</div>
+<div class="h-8 w-full mt-2 opacity-50">
+<svg class="w-full h-full sparkline-svg" viewBox="0 0 100 30">
+<path d="M0,10 L20,15 L40,12 L60,25 L80,22 L100,28" fill="none" stroke="#23D5C1" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="glass-card p-md rounded-xl space-y-base relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-pelagic-blue text-xl">psychology</span>
+<span class="text-pelagic-blue font-label-md text-label-md">New Today</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md">AI Anomalies</p>
+<h3 class="font-headline-md text-headline-md font-bold">8</h3>
+</div>
+<div class="h-8 w-full mt-2 opacity-50">
+<svg class="w-full h-full sparkline-svg" viewBox="0 0 100 30">
+<path d="M0,25 L25,25 L50,10 L75,10 L100,5" fill="none" stroke="#33ddc9" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="glass-card p-md rounded-xl space-y-base relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-bio-aqua text-xl">pets</span>
+<span class="text-bio-aqua font-label-md text-label-md">Verified</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md">Endangered Sightings</p>
+<h3 class="font-headline-md text-headline-md font-bold">42</h3>
+</div>
+<div class="h-8 w-full mt-2 opacity-50">
+<svg class="w-full h-full sparkline-svg" viewBox="0 0 100 30">
+<path d="M0,28 L20,20 L40,24 L60,15 L80,18 L100,10" fill="none" stroke="#23D5C1" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<!-- KPI 5 -->
+<div class="glass-card p-md rounded-xl space-y-base relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-yellow-400 text-xl">speed</span>
+<span class="text-yellow-400 font-label-md text-label-md">Moderate</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-md text-label-md">Ecosystem Risk Score</p>
+<h3 class="font-headline-md text-headline-md font-bold">68/100</h3>
+</div>
+<div class="h-1 bg-surface-variant/30 w-full mt-4 rounded-full overflow-hidden">
+<div class="h-full bg-yellow-400 w-[68%]"></div>
+</div>
+</div>
+</div>
+<!-- Main Chart & Map Section -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Trend Chart -->
+<div class="col-span-8 glass-card p-lg rounded-2xl relative">
+<div class="flex justify-between items-center mb-xl">
+<div>
+<h4 class="font-headline-sm text-headline-sm font-bold">Ecosystem Risk Trend</h4>
+<p class="text-on-surface-variant text-body-sm font-body-sm">Aggregate data from all monitored sectors</p>
+</div>
+<div class="flex gap-md">
+<div class="flex items-center gap-xs">
+<span class="w-3 h-3 rounded-full bg-bio-aqua"></span>
+<span class="text-label-sm font-label-sm">Risk Index</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="w-3 h-3 rounded-full bg-pelagic-blue"></span>
+<span class="text-label-sm font-label-sm">Recovery Speed</span>
+</div>
+</div>
+</div>
+<div class="h-80 w-full relative">
+<!-- SVG Chart Placeholder -->
+<svg class="w-full h-full overflow-visible" preserveAspectRatio="none">
+<defs>
+<linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#23D5C1" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#23D5C1" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+<path d="M0,250 Q100,150 200,200 T400,100 T600,180 T800,120" fill="none" stroke="#23D5C1" stroke-linecap="round" stroke-width="3"></path>
+<path d="M0,250 Q100,150 200,200 T400,100 T600,180 T800,120 V300 H0 Z" fill="url(#chartGradient)"></path>
+<path d="M0,180 Q150,220 300,140 T600,160 T800,50" fill="none" opacity="0.6" stroke="#33ddc9" stroke-dasharray="8 4" stroke-width="2"></path>
+</svg>
+<!-- Y Axis -->
+<div class="absolute left-0 top-0 h-full flex flex-col justify-between text-[10px] text-outline -translate-x-full pr-2">
+<span>100</span><span>75</span><span>50</span><span>25</span><span>0</span>
+</div>
+</div>
+<div class="flex justify-between mt-md px-md text-label-sm font-label-sm text-outline">
+<span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span>
+</div>
+</div>
+<!-- Bathymetric Map -->
+<div class="col-span-4 glass-card rounded-2xl overflow-hidden flex flex-col">
+<div class="p-md border-b border-outline-variant/10 flex justify-between items-center">
+<span class="font-label-md text-label-md uppercase tracking-wider text-tertiary">Tactical Map - Sector 7</span>
+<span class="material-symbols-outlined text-outline text-md cursor-pointer hover:text-tertiary transition-colors">fullscreen</span>
+</div>
+<div class="flex-1 relative bg-surface-container-lowest">
+<div class="absolute inset-0 z-0 opacity-40">
+<img class="w-full h-full object-cover" data-alt="A detailed digital 3D bathymetric map of the ocean floor, showing deep underwater canyons and shelves. The map uses a palette of deep navy and electric teal contours with glowing hotspots indicating environmental anomalies. High-tech sonar scan lines sweep across the surface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAY5fr5KuUfpWZFFPCV3LEP-xRdYUFCDxY0fojodH1o-FT-UyGNDeSBYd_QTLKNd7FDMyQT6dPyMU14g3_zSSKN1WPuE1WscIGg-rnEBdTqwn9bJQU2aIPA_1M4PuALdWONUgyW0sBTNLI2QZfOFNbadMbgUXDTMBroyMdt01JQfzaNdD_kaUqkjF0ZTFU1bItGflFBOaBUGsBLzKzTjo7YNQNa2UBF2KQBfMCN8r1mDI03K3Iv9wAw">
+</div>
+<!-- Map Overlays -->
+<div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+<div class="sonar-pulse w-4 h-4 bg-reef-red rounded-full shadow-[0_0_15px_rgba(255,107,107,0.8)]"></div>
+<div class="absolute top-6 left-1/2 -translate-x-1/2 bg-surface-container/90 px-2 py-1 rounded text-[10px] whitespace-nowrap border border-reef-red/30">
+                                    Critical: Illegal Dumping
+                                </div>
+</div>
+<div class="absolute bottom-1/4 right-1/4 z-10">
+<div class="w-3 h-3 bg-bio-aqua rounded-full shadow-[0_0_10px_rgba(35,213,193,0.8)]"></div>
+<div class="absolute top-5 left-1/2 -translate-x-1/2 bg-surface-container/90 px-2 py-1 rounded text-[10px] whitespace-nowrap border border-bio-aqua/30">
+                                    Humpback Whale Pod
+                                </div>
+</div>
+<!-- Map Controls -->
+<div class="absolute bottom-4 right-4 flex flex-col gap-2">
+<button class="w-8 h-8 bg-surface-container/90 rounded border border-outline-variant/20 flex items-center justify-center hover:bg-tertiary transition-colors hover:text-on-tertiary"><span class="material-symbols-outlined text-sm">add</span></button>
+<button class="w-8 h-8 bg-surface-container/90 rounded border border-outline-variant/20 flex items-center justify-center hover:bg-tertiary transition-colors hover:text-on-tertiary"><span class="material-symbols-outlined text-sm">remove</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Threat Bar Chart -->
+<div class="glass-card p-lg rounded-2xl">
+<h4 class="font-headline-sm text-headline-sm font-bold mb-lg">Detection by Threat Category</h4>
+<div class="space-y-md">
+<!-- Bar 1 -->
+<div class="space-y-xs">
+<div class="flex justify-between text-label-sm font-label-sm">
+<span>Plastic Waste</span>
+<span class="text-tertiary">42%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[42%] rounded-full shadow-[0_0_10px_rgba(51,221,201,0.3)]"></div>
+</div>
+</div>
+<!-- Bar 2 -->
+<div class="space-y-xs">
+<div class="flex justify-between text-label-sm font-label-sm">
+<span>Illegal Dumping</span>
+<span class="text-reef-red">28%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-reef-red w-[28%] rounded-full"></div>
+</div>
+</div>
+<!-- Bar 3 -->
+<div class="space-y-xs">
+<div class="flex justify-between text-label-sm font-label-sm">
+<span>Ghost Nets</span>
+<span class="text-yellow-400">18%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-yellow-400 w-[18%] rounded-full"></div>
+</div>
+</div>
+<!-- Bar 4 -->
+<div class="space-y-xs">
+<div class="flex justify-between text-label-sm font-label-sm">
+<span>Coral Bleaching</span>
+<span class="text-pelagic-blue">12%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-pelagic-blue w-[12%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Activity Sidebar -->
+<aside class="w-80 space-y-gutter">
+<div class="glass-card rounded-2xl flex flex-col h-full overflow-hidden">
+<div class="p-lg border-b border-outline-variant/10">
+<h4 class="font-headline-sm text-headline-sm font-bold">Recent Activity</h4>
+<p class="text-on-surface-variant text-body-sm font-body-sm">Real-time surveillance feed</p>
+</div>
+<div class="flex-1 overflow-y-auto p-md space-y-md">
+<!-- Activity Item 1 -->
+<div class="p-md rounded-xl bg-surface-container-low/50 border-l-4 border-reef-red flex gap-md group cursor-pointer hover:bg-surface-container transition-colors">
+<div class="w-10 h-10 rounded-full bg-reef-red/10 flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-reef-red" style="font-variation-settings: 'FILL' 1">gavel</span>
+</div>
+<div class="space-y-1">
+<p class="text-label-md font-label-md text-on-surface">Illegal dumping detected</p>
+<p class="text-[10px] text-outline">North Sector • 2m ago</p>
+<p class="text-body-sm text-on-surface-variant">Unidentified tanker discharging residue near coral shelf.</p>
+</div>
+</div>
+<!-- Activity Item 2 -->
+<div class="p-md rounded-xl bg-surface-container-low/50 border-l-4 border-yellow-400 flex gap-md group cursor-pointer hover:bg-surface-container transition-colors">
+<div class="w-10 h-10 rounded-full bg-yellow-400/10 flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-yellow-400" style="font-variation-settings: 'FILL' 1">thermostat</span>
+</div>
+<div class="space-y-1">
+<p class="text-label-md font-label-md text-on-surface">Coral bleaching alert</p>
+<p class="text-[10px] text-outline">Great Barrier • 15m ago</p>
+<p class="text-body-sm text-on-surface-variant">Surface temperature reached 31°C in monitored zone B.</p>
+</div>
+</div>
+<!-- Activity Item 3 -->
+<div class="p-md rounded-xl bg-surface-container-low/50 border-l-4 border-bio-aqua flex gap-md group cursor-pointer hover:bg-surface-container transition-colors">
+<div class="w-10 h-10 rounded-full bg-bio-aqua/10 flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-bio-aqua" style="font-variation-settings: 'FILL' 1">pets</span>
+</div>
+<div class="space-y-1">
+<p class="text-label-md font-label-md text-on-surface">Humpback whale pod tracked</p>
+<p class="text-[10px] text-outline">Mid-Atlantic • 45m ago</p>
+<p class="text-body-sm text-on-surface-variant">Group of 5 adults migrating North at 8 knots.</p>
+</div>
+</div>
+<!-- Activity Item 4 -->
+<div class="p-md rounded-xl bg-surface-container-low/50 border-l-4 border-pelagic-blue flex gap-md group cursor-pointer hover:bg-surface-container transition-colors">
+<div class="w-10 h-10 rounded-full bg-pelagic-blue/10 flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-pelagic-blue" style="font-variation-settings: 'FILL' 1">psychology</span>
+</div>
+<div class="space-y-1">
+<p class="text-label-md font-label-md text-on-surface">AI Pattern Match</p>
+<p class="text-[10px] text-outline">South Basin • 1h ago</p>
+<p class="text-body-sm text-on-surface-variant">Anomalous acoustic signature detected at 400m depth.</p>
+</div>
+</div>
+</div>
+<div class="p-lg mt-auto">
+<button class="w-full py-md px-xl bg-bio-aqua text-surface-container-lowest font-bold rounded-xl shadow-[0_0_20px_rgba(35,213,193,0.3)] hover:scale-[0.98] transition-transform active:scale-95 flex items-center justify-center gap-md">
+<span class="material-symbols-outlined">notification_important</span>
+                            View critical alerts
+                        </button>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Visual Polish: Bathymetric Scan Line -->
+<div class="fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-bio-aqua/20 to-transparent opacity-50 pointer-events-none z-[60] animate-scan"></div>
+<style>
+        @keyframes scan {
+            0% { transform: translateY(-100px); }
+            100% { transform: translateY(100vh); }
+        }
+        .animate-scan {
+            animation: scan 10s linear infinite;
+        }
+    </style>
+<script>
+        // Micro-interaction for cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body></html>

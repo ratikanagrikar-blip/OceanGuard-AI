@@ -1,0 +1,517 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Reports &amp; Insights | OceanGuard AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Manrope:wght@100..900&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed-dim": "#aecbdd",
+                      "primary-container": "#061924",
+                      "surface-variant": "#343536",
+                      "on-secondary-fixed": "#001e2c",
+                      "inverse-on-surface": "#303031",
+                      "surface-dim": "#131314",
+                      "error-container": "#93000a",
+                      "error": "#ffb4ab",
+                      "outline-variant": "#43474b",
+                      "on-primary-fixed": "#0b1d29",
+                      "tertiary": "#33ddc9",
+                      "on-surface-variant": "#c3c7cb",
+                      "surface-tint": "#b6c9d8",
+                      "surface-container-high": "#292a2b",
+                      "on-surface": "#e4e2e3",
+                      "on-primary": "#21323e",
+                      "on-background": "#e4e2e3",
+                      "tertiary-fixed-dim": "#33ddc9",
+                      "secondary-fixed": "#c9e7f9",
+                      "on-primary-container": "#718391",
+                      "tertiary-container": "#001b17",
+                      "outline": "#8d9195",
+                      "tertiary-fixed": "#5cfae5",
+                      "primary-fixed": "#d2e5f5",
+                      "surface-container-lowest": "#0d0e0f",
+                      "surface": "#131314",
+                      "on-error-container": "#ffdad6",
+                      "secondary-container": "#2e4a59",
+                      "surface-container": "#1f2021",
+                      "on-error": "#690005",
+                      "surface-bright": "#39393a",
+                      "on-tertiary-fixed-variant": "#005048",
+                      "primary-fixed-dim": "#b6c9d8",
+                      "on-secondary": "#173442",
+                      "inverse-surface": "#e4e2e3",
+                      "inverse-primary": "#4f616e",
+                      "background": "#131314",
+                      "secondary": "#aecbdd",
+                      "primary": "#b6c9d8",
+                      "on-secondary-container": "#9cb9cb",
+                      "on-tertiary-container": "#009082",
+                      "surface-container-low": "#1b1c1c",
+                      "surface-container-highest": "#343536",
+                      "on-tertiary": "#003731",
+                      "on-primary-fixed-variant": "#374955",
+                      "on-tertiary-fixed": "#00201c",
+                      "on-secondary-fixed-variant": "#2e4a59"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "sm": "12px",
+                      "xs": "8px",
+                      "base": "4px",
+                      "md": "16px",
+                      "margin-desktop": "40px",
+                      "xl": "32px",
+                      "lg": "24px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "label-md": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "headline-lg": ["Manrope"],
+                      "body-lg": ["Inter"],
+                      "headline-md": ["Manrope"],
+                      "headline-sm": ["Manrope"],
+                      "body-md": ["Inter"],
+                      "headline-xl": ["Manrope"],
+                      "body-sm": ["Inter"]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0d0e0f;
+            color: #e4e2e3;
+        }
+        .glass-panel {
+            background: rgba(11, 42, 56, 0.4);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(234, 247, 247, 0.1);
+        }
+        .glow-aqua {
+            box-shadow: 0 0 12px rgba(35, 213, 193, 0.15);
+        }
+        .sonar-arc {
+            border: 1px solid rgba(51, 221, 201, 0.2);
+            border-radius: 50%;
+        }
+        .bathymetric-bg {
+            background-image: radial-gradient(circle at 50% 50%, rgba(11, 42, 56, 0.2) 0%, transparent 80%);
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-body-md overflow-hidden">
+<div class="bathymetric-bg"></div>
+<!-- Side Navigation Shell -->
+<aside class="h-full w-64 fixed left-0 top-0 bg-primary-container border-r border-outline-variant/10 flex flex-col py-lg z-50">
+<div class="px-6 mb-10">
+<h1 class="text-headline-sm font-headline-xl text-tertiary tracking-tight leading-none">OceanGuard AI</h1>
+<p class="text-label-sm font-label-md text-on-primary-container mt-1">Marine Conservation</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="text-on-surface-variant hover:text-on-surface px-4 py-3 flex items-center gap-3 transition-all duration-300 ease-in-out hover:translate-x-1 hover:bg-secondary-container/20 group" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface px-4 py-3 flex items-center gap-3 transition-all duration-300 ease-in-out hover:translate-x-1 hover:bg-secondary-container/20 group" href="#">
+<span class="material-symbols-outlined">radar</span>
+<span class="font-label-md text-label-md">Surveillance</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface px-4 py-3 flex items-center gap-3 transition-all duration-300 ease-in-out hover:translate-x-1 hover:bg-secondary-container/20 group" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="font-label-md text-label-md">Analytics</span>
+</a>
+<a class="text-tertiary bg-secondary-container/30 border-l-4 border-tertiary px-4 py-3 flex items-center gap-3 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface px-4 py-3 flex items-center gap-3 transition-all duration-300 ease-in-out hover:translate-x-1 hover:bg-secondary-container/20 group" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full py-3 bg-tertiary text-on-tertiary rounded-lg font-label-md text-label-md flex items-center justify-center gap-2 glow-aqua transition-transform active:scale-95">
+<span class="material-symbols-outlined">add</span>
+                New Analysis
+            </button>
+<div class="mt-8 space-y-4">
+<div class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface cursor-pointer transition-colors">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface cursor-pointer transition-colors">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-tertiary/30">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a Chief Scientist with salt-and-pepper hair, wearing a high-tech naval research uniform. The background is a sophisticated laboratory with blue glowing marine data screens. The lighting is cinematic and high-contrast, fitting the OceanGuard AI brand aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeANs64yRiru84TjZbJqREe4V3iTLpNhkqe9gpsQeofvhjykNleZcOinBxsx5or5BLjq33D8Shp6ILOxeqbYBnWeumfZrmy2sPmieXR5ZJ0boCepR2pARqEQirBA85Rj3FalyIXhhyO14RWH6ZqnD0Xh2sl09zG0TszQlAFcENR9JXD7fCDnJdEyJX9CgDJzkRpkllJNo1-WM2upYIh06vcu3LiL4daRbKVEggrEGDfE8smLCJjbC_">
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md leading-none">Account</span>
+<span class="text-label-sm text-on-surface-variant/60">Chief Scientist</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="ml-64 h-screen flex flex-col overflow-hidden">
+<!-- Top Navbar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-surface/80 backdrop-blur-xl flex justify-between items-center h-16 px-margin-desktop">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-xl">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-full pl-10 pr-4 py-2 text-body-sm focus:outline-none focus:ring-2 focus:ring-tertiary/50 transition-all" placeholder="Search reports, data sources..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-4">
+<button class="text-on-surface-variant hover:text-tertiary transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-on-surface-variant hover:text-tertiary transition-colors"><span class="material-symbols-outlined">history</span></button>
+<button class="text-on-surface-variant hover:text-tertiary transition-colors"><span class="material-symbols-outlined">help</span></button>
+</div>
+<div class="h-8 w-px bg-outline-variant/20"></div>
+<div class="flex gap-2">
+<button class="px-4 py-2 text-tertiary border border-tertiary/20 rounded-lg font-label-md text-label-md hover:bg-tertiary/5 transition-colors">Export PDF</button>
+<button class="px-4 py-2 bg-tertiary text-on-tertiary rounded-lg font-label-md text-label-md glow-aqua hover:brightness-110 transition-all">Share Report</button>
+</div>
+</div>
+</header>
+<!-- Scrollable Content Canvas -->
+<div class="mt-16 p-8 overflow-y-auto flex-1 space-y-8">
+<!-- Header & Global Filters -->
+<div class="flex flex-col gap-6">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Reports &amp; Insights</h2>
+<p class="text-on-surface-variant font-body-md">Comprehensive analysis and ecosystem projections from the Deep Ocean Surveillance Network.</p>
+</div>
+<div class="flex flex-wrap gap-4 p-4 glass-panel rounded-xl">
+<div class="flex flex-col gap-1.5 min-w-[160px]">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest">Region</span>
+<select class="bg-surface-container border-none rounded-lg text-body-sm text-on-surface focus:ring-1 focus:ring-tertiary">
+<option>All Global Regions</option>
+<option>North Atlantic</option>
+<option>Great Barrier Reef</option>
+<option>Arctic Basin</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5 min-w-[160px]">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest">Date Range</span>
+<select class="bg-surface-container border-none rounded-lg text-body-sm text-on-surface focus:ring-1 focus:ring-tertiary">
+<option>Last 30 Days</option>
+<option>Last Quarter</option>
+<option>Year to Date</option>
+<option>Custom Range</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5 min-w-[160px]">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest">Detection Type</span>
+<select class="bg-surface-container border-none rounded-lg text-body-sm text-on-surface focus:ring-1 focus:ring-tertiary">
+<option>All Types</option>
+<option>Microplastics</option>
+<option>Acoustic Anomalies</option>
+<option>Illegal Fishing</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5 min-w-[160px]">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest">Format</span>
+<div class="flex gap-2 mt-1">
+<button class="px-3 py-1.5 bg-secondary-container/50 text-tertiary rounded font-label-md text-label-md border border-tertiary/20">PDF</button>
+<button class="px-3 py-1.5 hover:bg-secondary-container/30 text-on-surface-variant rounded font-label-md text-label-md transition-colors">CSV</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Top Section: Ocean Health Overview -->
+<section class="grid grid-cols-1 md:grid-cols-5 gap-4">
+<div class="glass-panel p-6 rounded-xl relative overflow-hidden group">
+<div class="absolute -top-4 -right-4 w-16 h-16 opacity-10">
+<div class="sonar-arc w-full h-full border-2"></div>
+<div class="sonar-arc w-3/4 h-3/4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+</div>
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase">Pollution Growth</span>
+<div class="flex items-end gap-2 mt-2">
+<span class="font-headline-md text-headline-md text-tertiary">-4.2%</span>
+<span class="material-symbols-outlined text-tertiary mb-1">trending_down</span>
+</div>
+<p class="text-xs text-on-surface-variant/60 mt-1">Improving trend in Sector 7</p>
+</div>
+<div class="glass-panel p-6 rounded-xl border-l-4 border-error/50">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase">Critical Hotspots</span>
+<div class="flex items-end gap-2 mt-2">
+<span class="font-headline-md text-headline-md text-error">12</span>
+<span class="material-symbols-outlined text-error mb-1">warning</span>
+</div>
+<p class="text-xs text-on-surface-variant/60 mt-1">Immediate action required</p>
+</div>
+<div class="glass-panel p-6 rounded-xl">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase">Coral Bleaching</span>
+<div class="flex items-end gap-2 mt-2">
+<span class="font-headline-md text-headline-md text-on-error">+2.1%</span>
+<span class="material-symbols-outlined text-on-error mb-1">trending_up</span>
+</div>
+<p class="text-xs text-on-surface-variant/60 mt-1">Thermal stress rising</p>
+</div>
+<div class="glass-panel p-6 rounded-xl">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase">Species Sightings</span>
+<div class="flex items-end gap-2 mt-2">
+<span class="font-headline-md text-headline-md text-secondary">42</span>
+<span class="material-symbols-outlined text-secondary mb-1">pets</span>
+</div>
+<p class="text-xs text-on-surface-variant/60 mt-1">Endangered status monitored</p>
+</div>
+<div class="glass-panel p-6 rounded-xl">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase">Projected Risk</span>
+<div class="flex items-end gap-2 mt-2">
+<span class="font-headline-md text-headline-md text-on-secondary-fixed-variant">Medium</span>
+<div class="h-3 w-12 bg-outline-variant/30 rounded-full mb-2.5 overflow-hidden">
+<div class="h-full w-3/5 bg-secondary"></div>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant/60 mt-1">Stability index: 64/100</p>
+</div>
+</section>
+<!-- Main Layout Grid -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Left: Available Reports & Charts -->
+<div class="col-span-12 lg:col-span-8 space-y-8">
+<div>
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-headline-sm text-headline-sm">Available Reports</h3>
+<button class="text-tertiary font-label-md text-label-md flex items-center gap-1 hover:underline">
+                                View Archive <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+<!-- Report Card 1 -->
+<div class="glass-panel p-5 rounded-xl flex flex-col group hover:border-tertiary/40 transition-all">
+<div class="w-10 h-10 rounded-lg bg-tertiary/10 flex items-center justify-center text-tertiary mb-4">
+<span class="material-symbols-outlined">eco</span>
+</div>
+<h4 class="font-headline-sm text-body-md font-bold mb-1">Monthly Ecosystem Health</h4>
+<p class="text-body-sm text-on-surface-variant/80 mb-6 flex-1">Aggregated biological indicators and habitat sustainability metrics.</p>
+<div class="flex items-center justify-between mt-auto">
+<span class="text-label-sm text-on-surface-variant/60">Last Generated: 2h ago</span>
+<button class="w-8 h-8 rounded-full border border-outline-variant/30 flex items-center justify-center text-on-surface-variant hover:bg-tertiary hover:text-on-tertiary transition-all">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+<!-- Report Card 2 -->
+<div class="glass-panel p-5 rounded-xl flex flex-col group hover:border-tertiary/40 transition-all">
+<div class="w-10 h-10 rounded-lg bg-error/10 flex items-center justify-center text-error mb-4">
+<span class="material-symbols-outlined">waves</span>
+</div>
+<h4 class="font-headline-sm text-body-md font-bold mb-1">Pollution Hotspot Evolution</h4>
+<p class="text-body-sm text-on-surface-variant/80 mb-6 flex-1">Spatial-temporal analysis of waste distribution and drift patterns.</p>
+<div class="flex items-center justify-between mt-auto">
+<span class="text-label-sm text-on-surface-variant/60">Last Generated: 2h ago</span>
+<button class="w-8 h-8 rounded-full border border-outline-variant/30 flex items-center justify-center text-on-surface-variant hover:bg-tertiary hover:text-on-tertiary transition-all">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+<!-- Report Card 3 -->
+<div class="glass-panel p-5 rounded-xl flex flex-col group hover:border-tertiary/40 transition-all">
+<div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary mb-4">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<h4 class="font-headline-sm text-body-md font-bold mb-1">Coral Bleaching Assessment</h4>
+<p class="text-body-sm text-on-surface-variant/80 mb-6 flex-1">Detailed multispectral mapping of reef thermal response and recovery.</p>
+<div class="flex items-center justify-between mt-auto">
+<span class="text-label-sm text-on-surface-variant/60">Last Generated: 2h ago</span>
+<button class="w-8 h-8 rounded-full border border-outline-variant/30 flex items-center justify-center text-on-surface-variant hover:bg-tertiary hover:text-on-tertiary transition-all">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+<!-- Report Card 4 -->
+<div class="glass-panel p-5 rounded-xl flex flex-col group hover:border-tertiary/40 transition-all">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-4">
+<span class="material-symbols-outlined">visibility</span>
+</div>
+<h4 class="font-headline-sm text-body-md font-bold mb-1">Species Observation Summary</h4>
+<p class="text-body-sm text-on-surface-variant/80 mb-6 flex-1">Visual and acoustic detection logs of high-priority marine fauna.</p>
+<div class="flex items-center justify-between mt-auto">
+<span class="text-label-sm text-on-surface-variant/60">Last Generated: 2h ago</span>
+<button class="w-8 h-8 rounded-full border border-outline-variant/30 flex items-center justify-center text-on-surface-variant hover:bg-tertiary hover:text-on-tertiary transition-all">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+<!-- Report Card 5 -->
+<div class="glass-panel p-5 rounded-xl flex flex-col group hover:border-tertiary/40 transition-all">
+<div class="w-10 h-10 rounded-lg bg-on-tertiary-container/10 flex items-center justify-center text-on-tertiary-container mb-4">
+<span class="material-symbols-outlined">insights</span>
+</div>
+<h4 class="font-headline-sm text-body-md font-bold mb-1">Predictive Risk Outlook</h4>
+<p class="text-body-sm text-on-surface-variant/80 mb-6 flex-1">AI-driven forecasts of climate impact and anthropogenic threats.</p>
+<div class="flex items-center justify-between mt-auto">
+<span class="text-label-sm text-on-surface-variant/60">Last Generated: 2h ago</span>
+<button class="w-8 h-8 rounded-full border border-outline-variant/30 flex items-center justify-center text-on-surface-variant hover:bg-tertiary hover:text-on-tertiary transition-all">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Comparative Analytics -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="glass-panel p-6 rounded-xl">
+<h3 class="font-headline-sm text-body-md font-bold mb-6">Current vs. Previous Month</h3>
+<div class="h-48 flex items-end justify-around gap-4 px-4">
+<div class="flex flex-col items-center gap-2 group cursor-pointer w-full">
+<div class="flex gap-1 w-full justify-center">
+<div class="w-4 bg-tertiary/20 rounded-t h-24 transition-all group-hover:bg-tertiary/40"></div>
+<div class="w-4 bg-tertiary rounded-t h-32 transition-all group-hover:scale-y-105"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant uppercase">Sightings</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer w-full">
+<div class="flex gap-1 w-full justify-center">
+<div class="w-4 bg-error/20 rounded-t h-36 transition-all group-hover:bg-error/40"></div>
+<div class="w-4 bg-error rounded-t h-28 transition-all group-hover:scale-y-105"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant uppercase">Detections</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer w-full">
+<div class="flex gap-1 w-full justify-center">
+<div class="w-4 bg-secondary/20 rounded-t h-20 transition-all group-hover:bg-secondary/40"></div>
+<div class="w-4 bg-secondary rounded-t h-24 transition-all group-hover:scale-y-105"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant uppercase">Hotspots</span>
+</div>
+</div>
+<div class="mt-4 flex justify-center gap-4">
+<div class="flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-outline-variant/40"></div><span class="text-xs text-on-surface-variant">Prev Month</span></div>
+<div class="flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-tertiary"></div><span class="text-xs text-on-surface-variant">Current</span></div>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-xl">
+<h3 class="font-headline-sm text-body-md font-bold mb-6">Regional Risk Rankings</h3>
+<div class="space-y-4">
+<div class="space-y-1">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-on-surface">Sector 4 (North Atlantic)</span>
+<span class="text-error font-bold">88%</span>
+</div>
+<div class="w-full h-1.5 bg-outline-variant/20 rounded-full">
+<div class="h-full bg-error rounded-full" style="width: 88%"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-on-surface">Sector 12 (Great Barrier)</span>
+<span class="text-on-error font-bold">72%</span>
+</div>
+<div class="w-full h-1.5 bg-outline-variant/20 rounded-full">
+<div class="h-full bg-on-error rounded-full" style="width: 72%"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-on-surface">Sector 9 (Indian Ocean)</span>
+<span class="text-secondary font-bold">45%</span>
+</div>
+<div class="w-full h-1.5 bg-outline-variant/20 rounded-full">
+<div class="h-full bg-secondary rounded-full" style="width: 45%"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-on-surface">Sector 1 (Arctic)</span>
+<span class="text-tertiary font-bold">31%</span>
+</div>
+<div class="w-full h-1.5 bg-outline-variant/20 rounded-full">
+<div class="h-full bg-tertiary rounded-full" style="width: 31%"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-on-surface">Sector 22 (Pacific NW)</span>
+<span class="text-tertiary font-bold">14%</span>
+</div>
+<div class="w-full h-1.5 bg-outline-variant/20 rounded-full">
+<div class="h-full bg-tertiary rounded-full" style="width: 14%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right: AI Insights -->
+<aside class="col-span-12 lg:col-span-4">
+<div class="glass-panel p-6 rounded-xl h-full flex flex-col border-tertiary/20">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h3 class="font-headline-sm text-headline-sm">AI Insights</h3>
+</div>
+<div class="flex-1 space-y-6">
+<div class="relative pl-6 border-l-2 border-tertiary/30">
+<p class="text-body-sm leading-relaxed text-on-surface italic">"Pollution levels in Sector 4 are decreasing due to localized intervention programs and stricter runoff controls in coastal cities."</p>
+<div class="mt-2 flex items-center gap-2">
+<span class="text-[10px] bg-tertiary/10 text-tertiary px-2 py-0.5 rounded font-label-md">DATA REF: S4-AUG23</span>
+<span class="text-[10px] text-on-surface-variant">Conf. Interval: 94%</span>
+</div>
+</div>
+<div class="relative pl-6 border-l-2 border-outline-variant/30">
+<p class="text-body-sm leading-relaxed text-on-surface">"Microplastic concentrations near the Arctic gyre show a cyclical surge, likely correlated with seasonal ice shelf sublimation."</p>
+<div class="mt-2 flex items-center gap-2">
+<span class="text-[10px] bg-outline-variant/20 text-on-surface-variant px-2 py-0.5 rounded font-label-md">SOURCE: HYDROMAP-V2</span>
+</div>
+</div>
+<div class="relative pl-6 border-l-2 border-error/30">
+<p class="text-body-sm leading-relaxed text-on-surface">"Critical warming event detected in the Coral Triangle. Predictive models suggest a high probability of mass bleaching within 14 days if current anomalies persist."</p>
+<div class="mt-2 flex items-center gap-2">
+<span class="text-[10px] bg-error-container text-error px-2 py-0.5 rounded font-label-md uppercase">High Priority Alert</span>
+</div>
+</div>
+<div class="relative pl-6 border-l-2 border-secondary/30">
+<p class="text-body-sm leading-relaxed text-on-surface">"Acoustic sensors in the South Pacific have identified a 12% increase in cetacean vocalizations, suggesting a potential shift in migration corridors."</p>
+<div class="mt-2 flex items-center gap-2">
+<span class="text-[10px] bg-secondary-container text-secondary px-2 py-0.5 rounded font-label-md">BIO-SENSE AI</span>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-outline-variant/10">
+<div class="w-full h-32 bg-cover bg-center rounded-lg mb-4 opacity-60 grayscale hover:grayscale-0 transition-all cursor-crosshair" data-alt="A futuristic topographical map of the ocean floor, displayed in glowing cyan and dark navy blue tones. The map features highlighted data points and connection lines between deep-sea sensor stations. The style is clean, technical, and data-heavy, evoking a professional scientific dashboard." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDb1_aNhhd01ZidBxwaRIS2niGPQsU6WQE5l09MG_E98MXSO-jWz12fFRS0CFuCuZF5N947MT8P435olZgkU1WyeMFuZeIfu_jV3972E0_JJewUBLkcSZq8vSjON6Jj625VeMm2F5KVdkBznFn-PNbBVAQfYHL3pk9qcz5bTNdqbQLahzRFsrpR-Rw-ydrOPKStyV_SkAqopFP36sModHESmjXowIw1Uz8oMqw_dxFhUcuFKFVIl-FU')"></div>
+<button class="w-full py-2.5 bg-surface-container-highest hover:bg-surface-container-high text-on-surface rounded-lg font-label-md text-label-md transition-colors">
+                                Deep Analysis Mode
+                            </button>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        document.querySelectorAll('.glass-panel').forEach(panel => {
+            panel.addEventListener('mousemove', (e) => {
+                const rect = panel.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                panel.style.setProperty('--mouse-x', `${x}px`);
+                panel.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body></html>
